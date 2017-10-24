@@ -32,7 +32,7 @@ public class LogoutController extends HttpServlet
 		session.getMaxInactiveInterval();
 		session.invalidate();
 		logger.info("Successfully logout");
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("login");
 	}
 
 }

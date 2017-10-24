@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<link rel="stylesheet" type="text/css" href="css/form.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>Login</title>
-<style type="text/css">
+<!-- <style type="text/css">
 .container
 {
 	border : 1px solid black;
@@ -35,18 +35,29 @@
     line-height: 20px;
 }
 
-</style>
+</style> -->
+<script type="text/javascript">
+
+</script>
 </head>
 <body class = "body">
-		<form action="Homepage" method="post">
+	
+		<form action="LoginPage" method="post">
   		<div class="container">
+  		
  			<h2>Sign in</h2>
                 <!--  <b><font color="white">Login Form</font> </b> -->
-            
+              <% String message= (String) session.getAttribute("error");
+               if(message!=null)
+               {
+               		out.println("<font color='red'><h4>"+message+"</h4></font>");
+               		session.removeAttribute("error");
+               }
+               %> 
+               
                 <div class="input-control">
 				<label for="email">Email:</label>
-		      	<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
-		      	<div id="errUser"></div>    
+		      	<input type="email" class="form-control" id="email" autocomplete="username" name="email" placeholder="Enter email" required onsubmit="validate(this)">   
 			</div><br>
 
 			<div class="input-control">
@@ -56,7 +67,7 @@
 			</div>
 			<br>
 				      <button type="submit" class="btn btn-primary" style="margin-left: 20%; width:80px"><b>Login</b></button>
-				      <a  class="btn btn-primary" href="signup.jsp" role="button"  style="margin-right: 20%; width:80px"><b>SignUp</b></a>
+				      <a  class="btn btn-primary" href="signup" role="button"  style="margin-right: 20%; width:80px"><b>SignUp</b></a>
 			<br>
 		</div>
 			 

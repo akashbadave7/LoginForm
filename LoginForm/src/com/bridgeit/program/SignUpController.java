@@ -1,7 +1,8 @@
 package com.bridgeit.program;
-
+import com.bridgeit.program.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Authenticator.RequestorType;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,11 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -31,9 +34,9 @@ public class SignUpController extends HttpServlet
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		Validation validate = new Validation();
 		BasicConfigurator.configure();
-		
+		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 		response.setContentType("text/html");
 		 // JDBC driver name and database URL
@@ -44,23 +47,36 @@ public class SignUpController extends HttpServlet
 		String pass = request.getParameter("password");
 		String mobile = request.getParameter("mobile");
 		
+		
 		user.setName(name);
 		user.setEmail(email);
 		user.setPassword(pass);
 		user.setMobile(mobile);
+		boolean valid = validate.signUpValidator(user,session);
+		
 		boolean flag = db.insertUser(user);
-		if(flag==true)
+		if(valid==true)
 		{
-			logger.info("Signup successfull");
-			out.println("Signup successful");
-			response.sendRedirect("login.jsp");
+			if(flag==true)
+			{
+				logger.info("Signup successfull");
+				out.println("Signup successful");
+				response.sendRedirect("login");
+			}
+			else
+			{
+				logger.warn("User already exits.");
+				/*out.println("<font color='red'>Email or phone number alredy exits</font>");
+				request.getRequestDispatcher("signup").include(request, response);*/
+				
+				session.setAttribute("error", "User already exits.");
+			    response.sendRedirect("signup");
+				return;
+			}
 		}
 		else
 		{
-			logger.warn("User already exits.");
-			out.println("<font color='red'>Email or phone number alredy exits</font>");
-			request.getRequestDispatcher("signup.jsp").include(request, response);
-			return;
+			response.sendRedirect("signup");
 		}
 	}
 }

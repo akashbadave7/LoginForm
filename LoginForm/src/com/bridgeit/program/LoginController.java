@@ -43,7 +43,7 @@ public class LoginController extends HttpServlet
 		userDetails.setEmail(email);
 		userDetails.setPassword(password);
 		userDetails = database.getEmail(userDetails);
-		System.out.println("Inside login controller");
+		
 		if(userDetails.isValid())
 		{
 			
@@ -51,18 +51,18 @@ public class LoginController extends HttpServlet
 			HttpSession session = request.getSession(true); 
 			session.setAttribute("email",email);
 			session.setAttribute("name", userDetails.getName());
-			response.sendRedirect("homepage.jsp"); //logged-in page 
+			response.sendRedirect(response.encodeRedirectURL("homepage")); //logged-in page 
 		}
 		else 
 		{
 			logger.warn("Login Failed");
-			out.println("<script type=\"text/javascript\">");
-		    out.println("alert('User or password incorrect');");
-		    out.println("</script>");
+			HttpSession session = request.getSession();
+			session.setAttribute("error", "Wrong username or password");
 		    
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("login.jsp");
-			out.println("<font color=red>Either user name or password is wrong.</font>");
-			requestDispatcher.include(request, response);
+			response.sendRedirect("login");
+			/*out.println("<font color=red>Either user name or password is wrong.</font>");
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("login");
+			requestDispatcher.include(request, response);*/
 			/*response.sendRedirect("login.jsp"); //error page */
 		}
 			
